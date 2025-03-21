@@ -1,3 +1,18 @@
+# Network Interface for RedHat VMs
+resource "azurerm_network_interface" "rhel_nic" {
+  count               = 2
+  name                = "rhel-nic-${count.index + 1}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = var.subnet_id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+# RedHat Linux VMs
 resource "azurerm_linux_virtual_machine" "rhel_vm" {
   count                 = 2
   name                  = "rhel-vm-${count.index + 1}"
@@ -6,7 +21,11 @@ resource "azurerm_linux_virtual_machine" "rhel_vm" {
   size                  = "Standard_B2ms"
   admin_username        = var.admin_username
   admin_password        = var.admin_password
-  network_interface_ids = [azurerm_network_interface.rhel_nic[count.index].id]
+  disable_password_authentication = false
+
+  network_interface_ids = [
+    azurerm_network_interface.rhel_nic[count.index].id
+  ]
 
   source_image_reference {
     publisher = "RedHat"
@@ -19,8 +38,4 @@ resource "azurerm_linux_virtual_machine" "rhel_vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-}
-
-output "vm_ids" {
-  value = concat(azurerm_windows_virtual_machine.windows_vm[*].id, azurerm_linux_virtual_machine.rhel_vm[*].id)
 }
