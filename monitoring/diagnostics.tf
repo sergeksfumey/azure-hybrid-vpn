@@ -1,3 +1,13 @@
+# Log Analytics Workspace
+resource "azurerm_log_analytics_workspace" "log" {
+  name                = "log-workspace"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+# Diagnostic settings for each VM
 resource "azurerm_monitor_diagnostic_setting" "vm_diagnostics" {
   for_each = toset(var.vm_ids)
 

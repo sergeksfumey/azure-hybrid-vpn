@@ -27,7 +27,7 @@ resource "azurerm_virtual_network_gateway" "vpn_gateway" {
   }
 
   vpn_client_configuration {
-    address_pool = ["172.16.0.0/24"]
+    address_space = ["172.16.0.0/24"]   # ✅ fixed from address_pool to address_space
 
     root_certificate {
       name             = "P2SRootCert"
@@ -36,7 +36,7 @@ resource "azurerm_virtual_network_gateway" "vpn_gateway" {
   }
 }
 
-# Output the public IP of VPN Gateway
+# Output Public IP of VPN Gateway
 output "vpn_gateway_ip" {
   value = azurerm_public_ip.vpn_gateway_ip.ip_address
 }
