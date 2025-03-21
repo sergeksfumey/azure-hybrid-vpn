@@ -16,7 +16,7 @@ stages:
     jobs:
       - job: Terraform
         pool:
-          vmImage: 'ubuntu-latest'
+          name: local-macos-agent
         steps:
 
           - task: UsePythonVersion@0
