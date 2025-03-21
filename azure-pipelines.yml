@@ -16,7 +16,7 @@ stages:
     jobs:
       - job: Terraform
         pool:
-          name: local-macos-agent
+          name: macOS-Agent-Pool
         steps:
 
           - task: UsePythonVersion@0
