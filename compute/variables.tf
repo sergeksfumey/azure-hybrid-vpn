@@ -1,19 +1,21 @@
 variable "location" {
   type        = string
-  description = "Azure region for deployment"
-  default     = "East US"
+  description = "Azure region for compute resources"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Azure resource group for all resources"
-  default     = "rg-hybrid-vpn"
+  description = "Resource group for compute resources"
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "Subnet ID where VMs will be deployed"
 }
 
 variable "admin_username" {
   type        = string
   description = "Admin username for VMs"
-  default     = "adminuser"
 }
 
 variable "admin_password" {
@@ -21,3 +23,4 @@ variable "admin_password" {
   description = "Admin password for VMs"
   sensitive   = true
 }
+
