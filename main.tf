@@ -9,6 +9,9 @@ module "compute" {
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = module.network.vm_subnet_id
+
+  admin_username      = var.admin_username       # ← add this
+  admin_password      = var.admin_password       # ← add this  
 }
 
 module "storage" {
