@@ -4,46 +4,32 @@ trigger:
       - master
 
 variables:
-  TF_VERSION: '1.5.7'
-  ARM_SUBSCRIPTION_ID: '7550a46c-2a36-474a-a670-a5e47656284b'
-  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-  ARM_TENANT_ID: $(ARM_TENANT_ID)
-  TF_VAR_admin_password: $(TF_VAR_admin_password)
+- group: TerraformSecrets   # ✅ securely defined in DevOps UI
+
+pool:
+  name: macOS-Agent-Pool
 
 stages:
-  - stage: Terraform
-    jobs:
-      - job: Terraform
-        pool:
-          name: macOS-Agent-Pool
-        steps:
+- stage: terraform
+  jobs:
+    - job: runTerraform
+      steps:
+        - checkout: self
 
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.x'
+        - script: terraform init
+          displayName: Terraform Init
 
-          - script: |
-              curl -sSL https://install.terraform.io/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -o terraform.zip
-              unzip terraform.zip
-              sudo mv terraform /usr/local/bin/
-            displayName: 'Install Terraform'
+        - script: terraform validate
+          displayName: Terraform Validate
 
-          - checkout: self
+        - script: terraform plan -out=tfplan
+          displayName: Terraform Plan
 
-          - script: terraform init
-            displayName: 'Terraform Init'
-
-          - script: terraform validate
-            displayName: 'Terraform Validate'
-
-          - script: terraform plan -out=tfplan
-            displayName: 'Terraform Plan'
-
-          - script: terraform apply -auto-approve tfplan
-            displayName: 'Terraform Apply'
-            env:
-              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-              ARM_TENANT_ID: $(ARM_TENANT_ID)
+        - script: terraform apply -auto-approve tfplan
+          displayName: Terraform Apply
+          env:
+            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+            ARM_TENANT_ID: $(ARM_TENANT_ID)
+            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+            TF_VAR_admin_password: $(TF_VAR_admin_password)
