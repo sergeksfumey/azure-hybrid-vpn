@@ -31,7 +31,7 @@ resource "azurerm_virtual_network_gateway" "vpn_gateway" {
 
     root_certificate {
       name             = "P2SRootCert"
-      public_cert_data = filebase64("../certs/rootcert.pem")
+      public_cert_data = filebase64("${path.module}/../certs/rootcert.pem")
     }
   }
 }
