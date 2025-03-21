@@ -21,3 +21,11 @@ variable "admin_password" {
   description = "Admin password for VMs"
   sensitive   = true
 }
+
+variable "windows_vm_count" {
+  default = 3
+}
+
+variable "redhat_vm_count" {
+  default = 2
+}
