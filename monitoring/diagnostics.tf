@@ -1,4 +1,4 @@
-# Log Analytics Workspace
+# Log Analytics Workspace for monitoring diagnostics
 resource "azurerm_log_analytics_workspace" "log" {
   name                = "log-workspace"
   location            = var.location
@@ -7,12 +7,12 @@ resource "azurerm_log_analytics_workspace" "log" {
   retention_in_days   = 30
 }
 
-# Diagnostic settings for each VM
+# Diagnostic settings for all VMs using count to handle dynamic VM IDs clearly
 resource "azurerm_monitor_diagnostic_setting" "vm_diagnostics" {
-  for_each = toset(var.vm_ids)
+  count = length(var.vm_ids)
 
-  name                       = "vm-diagnostics-${basename(each.key)}"
-  target_resource_id         = each.key
+  name                       = "vm-diagnostics-${count.index + 1}"
+  target_resource_id         = var.vm_ids[count.index]
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log.id
 
   enabled_log {
