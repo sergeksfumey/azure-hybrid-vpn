@@ -9,3 +9,11 @@ output "windows_vm_ids" {
 output "redhat_vm_ids" {
   value = azurerm_linux_virtual_machine.rhel_vm[*].id
 }
+
+output "vm_ids" {
+  value = concat(
+    [azurerm_windows_virtual_machine.jumpbox.id],
+    azurerm_windows_virtual_machine.windows_vm[*].id,
+    azurerm_linux_virtual_machine.rhel_vm[*].id
+  )
+}

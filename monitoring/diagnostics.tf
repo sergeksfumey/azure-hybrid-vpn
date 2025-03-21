@@ -7,10 +7,10 @@ resource "azurerm_log_analytics_workspace" "log" {
   retention_in_days   = 30
 }
 
-# Diagnostic setting for the Jumpbox VM explicitly
+# Diagnostic setting for Jumpbox VM explicitly
 resource "azurerm_monitor_diagnostic_setting" "jumpbox_diagnostics" {
   name                       = "jumpbox-diagnostics"
-  target_resource_id         = module.compute.jumpbox_vm_id
+  target_resource_id         = var.jumpbox_vm_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log.id
 
   enabled_log {
@@ -25,9 +25,9 @@ resource "azurerm_monitor_diagnostic_setting" "jumpbox_diagnostics" {
 
 # Diagnostic settings for Windows Servers explicitly
 resource "azurerm_monitor_diagnostic_setting" "windows_diagnostics" {
-  count                      = length(module.compute.windows_vm_ids)
+  count                      = length(var.windows_vm_ids)
   name                       = "windows-server-${count.index + 1}-diagnostics"
-  target_resource_id         = module.compute.windows_vm_ids[count.index]
+  target_resource_id         = var.windows_vm_ids[count.index]
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log.id
 
   enabled_log {
@@ -42,9 +42,9 @@ resource "azurerm_monitor_diagnostic_setting" "windows_diagnostics" {
 
 # Diagnostic settings for RedHat Servers explicitly
 resource "azurerm_monitor_diagnostic_setting" "redhat_diagnostics" {
-  count                      = length(module.compute.redhat_vm_ids)
+  count                      = length(var.redhat_vm_ids)
   name                       = "redhat-server-${count.index + 1}-diagnostics"
-  target_resource_id         = module.compute.redhat_vm_ids[count.index]
+  target_resource_id         = var.redhat_vm_ids[count.index]
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log.id
 
   enabled_log {
