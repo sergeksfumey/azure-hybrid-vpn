@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "vpn_gateway_ip" {
   name                = "vpn-gateway-pip"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"  # ✅ explicitly set to static for Standard SKU
   sku                 = "Standard"
 }
 
