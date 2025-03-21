@@ -23,11 +23,15 @@ module "storage" {
 module "monitoring" {
   source              = "./monitoring"
   location            = var.location
-  resource_group_name = module.network.resource_group_name # ✅ explicitly correct reference
-  
+  resource_group_name = module.network.resource_group_name
+
   jumpbox_vm_id       = module.compute.jumpbox_vm_id
   windows_vm_ids      = module.compute.windows_vm_ids
   redhat_vm_ids       = module.compute.redhat_vm_ids
+
+  windows_vm_count    = 3
+  redhat_vm_count     = 2
 }
+
 
 
